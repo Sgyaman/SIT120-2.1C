@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>To-Do List SIT120</title>
+    <style>
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+        }
+
+       
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        
+        }
+
+        
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 10px solid #ccc;
+            border-radius: 5px;
+        }
+
+     
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        
+        button:hover {
+            background-color: #a32363;
+        }
+
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            background-color: #f18181;
+        }
+
+     
+        li.completed {
+            background-color: #1dd31d;
+        }
+
+        
+        .delete-btn {
+            color: #ff3333;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        
+        .completed-label {
+            color: #008000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="app">
+        <h1>SIT120 2.1C To-Do List</h1>
+        <input type="text" v-model="newTask" @keyup.enter="addTask" placeholder="Enter your task...">
+        <button @click="addTask">Add to my To-Do-List</button>
+        <p v-if="showWarning" class="warning-message">Please enter a task before adding to the list.</p>
+        <ul>
+            <li v-for="(task, index) in tasks" :key="index" :class="{ completed: task.completed }">
+                <span @click="toggleComplete(index)" class="delete-btn">❌</span>
+                <span>{{ task.text }}</span>
+                <span v-show="task.completed" class="completed-label">Well Done! Completed</span>
+                <span @click="deleteTask(index)" class="delete-btn">❌</span>
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.0/dist/vue.global.min.js"></script>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    newTask: "",
+                    tasks: [],
+                    showWarning: false,
+                };
+            },
+            methods: {
+                addTask() {
+                    const taskText = this.newTask.trim();
+                    if (taskText !== "") {
+                const taskArray = taskText.split(','); // Split by comma
+                taskArray.forEach(task => {
+                    this.tasks.push({ text: task.trim(), completed: false }); // Add each task separately
+                });
+                this.newTask = "";
+                this.showWarning = false; // Reset the warning flag
+            } else {
+                this.showWarning = true;
+            }
+                },
+                toggleComplete(index) {
+            const task = this.tasks[index];
+            if (task.completed) {
+                this.tasks.splice(index, 1);
+            } else {
+                task.completed = !task.completed;
+            }
+                },
+            },
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
